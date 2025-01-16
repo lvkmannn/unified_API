@@ -2,33 +2,33 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional
 
 '''
-    Sample data for unified API
+Sample data for unified API
 
-    {
-        "shipping_type": "domestic",
-        "package_type": "document",
-        "origin": {
-            "country": "MY",
-            "postcode": "40000",
-            "state": "Selangor"
-        },
-        "destination": {
-            "country": "MY",
-            "postcode": "50000",
-            "state": "Kuala Lumpur"
-        },
-        "package": {
-            "weight": 30,
-            "dimensions": {
-                "length": 1,
-                "width": 1,
-                "height": 1
-            }
-        },
-        "jnt_shipping_type": "EX"
-    }
-    
-    '''
+{
+    "shipping_type": "domestic",
+    "package_type": "document",
+    "origin": {
+        "country": "MY",
+        "postcode": "40000",
+        "state": "Selangor"
+    },
+    "destination": {
+        "country": "MY",
+        "postcode": "50000",
+        "state": "Kuala Lumpur"
+    },
+    "package": {
+        "weight": 30,
+        "dimensions": {
+            "length": 1,
+            "width": 1,
+            "height": 1
+        }
+    },
+    "jnt_shipping_type": "EX"
+}
+
+'''
 
 class OriginDestination(BaseModel):
     country: str = Field(..., description="Country code, e.g., 'MY'")
@@ -51,7 +51,7 @@ class Package(BaseModel):
     @field_validator("weight")
     def validate_weight(cls, value):
 
-        print("Value in unified: ", value)
+        #print("Value in unified: ", value)
         if value <= 0:
             raise ValueError("Weight must be a positive number.")
         elif value > 30:

@@ -27,9 +27,8 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
     payload["_token"] = csrf_token_value
     post_response = session.post(GET_URL, headers=HEADERS, data=payload)
 
-    #print("Post Payload:", payload)
-    print("J&T Post Response:", post_response.status_code)
-    print("J&T Payload", payload)
+    #print("J&T Post Response:", post_response.status_code)
+    #print("J&T Payload", payload)
 
     soup = BeautifulSoup(post_response.text, 'html.parser')
     rows = soup.find_all('tr')
