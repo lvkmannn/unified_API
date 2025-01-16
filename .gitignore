@@ -1,0 +1,36 @@
+# Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual environment
+.venv/
+
+# Configuration files
+*.env
+*.ini
+*.cfg
+
+# Logs
+*.log
+logs/
+
+# IDE and Editor settings
+.idea/
+.vscode/
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Cache and temporary files
+.cache/
+*.bak
+*.tmp
+
+# Test coverage reports
+.coverage
+htmlcov/
+*.cover
+
