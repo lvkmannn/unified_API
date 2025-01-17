@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional
+from app.core.logging_config import logger
 
 '''
 Sample data for unified API
@@ -39,6 +40,7 @@ class OriginDestination(BaseModel):
     @field_validator("country")
     def validate_country(cls, value):
         if len(value) != 2:
+            logger.error(f"Invalid country code: {value}. Must be a 2-letter ISO code.")
             raise ValueError("Country code must be a 2-letter ISO code.")
         return value
 
@@ -53,8 +55,10 @@ class Package(BaseModel):
 
         #print("Value in unified: ", value)
         if value <= 0:
+            logger.error(f"Invalid weight: {value}. Must be positive.")
             raise ValueError("Weight must be a positive number.")
         elif value > 30:
+            logger.warning(f"Weight exceeds limit for J&T: {value}kg.")
             raise ValueError("Weight must not exceed 30kg for J&T")
         return value
 
@@ -69,6 +73,7 @@ class Package(BaseModel):
 
         if any(dim is not None for dim in [length, width, height]):
             if not all(dim is not None and dim > 0 for dim in [length, width, height]):
+                logger.error(f"Invalid dimensions: {dimensions}. All dimensions must be positive.")
                 raise ValueError("All dimensions (length, width, height) must be positive if provided.")
         return values
 
@@ -86,6 +91,7 @@ class ShippingRequest(BaseModel):
     def validate_shipping_type(cls, value):
         allowed_types = {"domestic", "international"}
         if value not in allowed_types:
+            logger.error(f"Invalid shipping_type: {value}. Must be one of {allowed_types}.")
             raise ValueError(f"Invalid shipping_type: {value}. Must be one of {allowed_types}.")
         return value
 
@@ -94,6 +100,7 @@ class ShippingRequest(BaseModel):
     def validate_package_type(cls, value):
         allowed_types = {"parcel", "document"}
         if value not in allowed_types:
+            logger.error(f"Invalid package type: {value}. Must be one of {allowed_types}.")
             raise ValueError(f"Invalid package type: {value}. Must be one of  {allowed_types}.")
         return value
 

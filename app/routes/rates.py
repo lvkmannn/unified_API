@@ -4,6 +4,7 @@ from app.services.jnt_api import fetch_jt_rate
 from app.schemas.unified import ShippingRequest
 from app.utils.payload import create_citylink_payload, create_jt_payload
 from app.utils.cache import get_cached_rates, set_cached_rates
+from app.core.logging_config import logger
 
 router = APIRouter()
 
@@ -23,10 +24,10 @@ async def get_shipping_rates(unified_input: ShippingRequest):
                     f"{unified_input.package.item_value if unified_input.package.item_value is not None else '0'}"
 
         
-         # Check if rates are cached
+        # Check if rates are cached
         cached_rates = get_cached_rates(cache_key)
         if cached_rates:
-            print("Cache hit for key:", cache_key)
+            logger.info(f"Cache hit for key: {cache_key}")
             return {
                 "data": [
                     {"courier": "citylink", "rate": cached_rates["citylink_rate"]},
@@ -34,7 +35,7 @@ async def get_shipping_rates(unified_input: ShippingRequest):
                 ]
             }
         
-        print("Cache miss for key:", cache_key)
+        logger.info(f"Cache miss for key: {cache_key}")
 
         # Convert the parsed model into a dictionary for further processing
         input_data = unified_input.model_dump() 
@@ -44,13 +45,19 @@ async def get_shipping_rates(unified_input: ShippingRequest):
         jt_payload = create_jt_payload(input_data)
 
         # Fetch rates for CityLink
+        # Fetch rates for CityLink
+        logger.info("Fetching rates from CityLink")
         citylink_rate = await fetch_citylink_rate(citylink_payload)
+        logger.info(f"CityLink Rate: {citylink_rate}")
 
         # Fetch rates for J&T
         package_type = input_data.get("package_type", "parcel")  # Default to parcel if not specified
+        logger.info("Fetching rates from J&T")
         jt_rate = fetch_jt_rate(jt_payload, package_type=package_type)
+        logger.info(f"J&T Rate: {jt_rate}")
 
         # Cache the results
+        logger.info(f"Caching rates for key: {cache_key}")
         set_cached_rates(cache_key, citylink_rate, jt_rate)
 
         # Construct the JSON response
@@ -64,7 +71,9 @@ async def get_shipping_rates(unified_input: ShippingRequest):
         return response
 
     except ValueError as ve:
+        logger.error(f"ValueError: {ve}")
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
+        logger.exception(f"Unexpected error occurred: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 

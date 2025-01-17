@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from app.core.logging_config import logger
 
 def fetch_jt_rate(payload: dict, package_type: str) -> float:
     GET_URL = "https://www.jtexpress.my/shipping-rates"
@@ -10,27 +11,28 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
         "X-Requested-With": "XMLHttpRequest"
     }
 
+    logger.info("Fetching J&T rate")
     session = requests.Session()
     response = session.get(GET_URL, headers=HEADERS)
-    
+    logger.debug(f"GET request to {GET_URL} returned status code {response.status_code}")
 
     if response.status_code != 200:
+        logger.error(f"Failed to fetch CSRF token. Status code: {response.status_code}")
         raise ValueError(f"Failed to fetch the response. Status code: {response.status_code}")
 
     # Parse the CSRF token
     soup = BeautifulSoup(response.text, 'html.parser')
     csrf_token = soup.find('input', {'name': '_token'})
     if not csrf_token:
+        logger.error("CSRF Token not found.")
         raise ValueError("CSRF Token not found.")
     csrf_token_value = csrf_token['value']
+    logger.debug(f"CSRF Token retrieved: {csrf_token_value}")
 
     payload["_token"] = csrf_token_value
 
-    print("J&T Payload", payload)
     post_response = session.post(GET_URL, headers=HEADERS, data=payload)
-
-    #print("J&T Post Response:", post_response.status_code)
-    
+    logger.debug(f"POST request to {GET_URL} returned status code {post_response.status_code}")
 
     soup = BeautifulSoup(post_response.text, 'html.parser')
     rows = soup.find_all('tr')
@@ -56,5 +58,5 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
             else:
                 raise ValueError(f"Invalid package_type: {package_type}. Must be 'parcel' or 'document'.")
 
-
+    logger.error("J&T rate not found in response")
     raise ValueError("J&T rate not found in response")
