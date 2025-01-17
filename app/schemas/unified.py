@@ -45,7 +45,7 @@ class OriginDestination(BaseModel):
 class Package(BaseModel):
     weight: float
     dimensions: Optional[dict] = None
-    value: Optional[float] = None
+    item_value: Optional[float] = None
 
     # Validator for weight
     @field_validator("weight")

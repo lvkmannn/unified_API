@@ -43,7 +43,8 @@ def create_jt_payload(unified_input: dict) -> dict:
         "length": package["dimensions"]["length"],
         "width": package["dimensions"]["width"],
         "height": package["dimensions"]["height"],
-        "item_value": package.get("value", ""),  # Optional field for J&T
+        "insurance":"",
+        "item_value": package.get("item_value", ""),  # Optional field for J&T
     }
 
     return payload

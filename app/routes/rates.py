@@ -3,7 +3,7 @@ from app.services.citylink_api import fetch_citylink_rate
 from app.services.jnt_api import fetch_jt_rate
 from app.schemas.unified import ShippingRequest
 from app.utils.payload import create_citylink_payload, create_jt_payload
-from app.utils.redis_cache import get_cached_rates, set_cached_rates
+from app.utils.cache import get_cached_rates, set_cached_rates
 
 router = APIRouter()
 
@@ -19,7 +19,9 @@ async def get_shipping_rates(unified_input: ShippingRequest):
                     f"{unified_input.package.dimensions.get('length', '')}x" \
                     f"{unified_input.package.dimensions.get('width', '')}x" \
                     f"{unified_input.package.dimensions.get('height', '')}:" \
-                    f"{unified_input.jnt_shipping_type}"
+                    f"{unified_input.jnt_shipping_type}:" \
+                    f"{unified_input.package.item_value if unified_input.package.item_value is not None else '0'}"
+
         
          # Check if rates are cached
         cached_rates = get_cached_rates(cache_key)

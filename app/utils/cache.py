@@ -1,13 +1,5 @@
-import redis
 import json
-
-# Configure Redis connection
-redis_client = redis.StrictRedis(
-    host="localhost",  # Replace with your Redis server address
-    port=6379,
-    db=0,
-    decode_responses=True  # Decode responses to strings
-)
+from app.core.redis import redis_client
 
 def get_cached_rates(cache_key: str):
     """

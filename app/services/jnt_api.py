@@ -25,10 +25,12 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
     csrf_token_value = csrf_token['value']
 
     payload["_token"] = csrf_token_value
+
+    print("J&T Payload", payload)
     post_response = session.post(GET_URL, headers=HEADERS, data=payload)
 
     #print("J&T Post Response:", post_response.status_code)
-    #print("J&T Payload", payload)
+    
 
     soup = BeautifulSoup(post_response.text, 'html.parser')
     rows = soup.find_all('tr')
@@ -42,6 +44,7 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
             # Select the appropriate rate based on package_type
             if package_type == "parcel":
                 if rates[0].upper() != "N/A":
+                    print("J&T Parcel Rate: ", rates[0])
                     return float(rates[0])
                 else:
                     return "N/A"
@@ -55,4 +58,3 @@ def fetch_jt_rate(payload: dict, package_type: str) -> float:
 
 
     raise ValueError("J&T rate not found in response")
-

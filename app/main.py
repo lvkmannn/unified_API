@@ -1,7 +1,27 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from app.routes import rates
+from app.utils.rate_limiter import is_rate_limited
 
 app = FastAPI()
+
+@app.middleware("http")
+async def rate_limiter_middleware(request: Request, call_next):
+    client_ip = request.client.host
+    max_requests = 10
+    window_seconds = 60
+
+    if is_rate_limited(client_ip, max_requests, window_seconds):
+        return JSONResponse(
+            status_code=429,
+            content={
+                "error": "Too many requests",
+                "message": "Please try again later.",
+                "retry_after": window_seconds,  # Optional: Include time to retry
+            },
+        )
+
+    return await call_next(request)
 
 @app.get("/")
 def read_root():
