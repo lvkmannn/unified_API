@@ -28,6 +28,7 @@ Thumbs.db
 .cache/
 *.bak
 *.tmp
+.pytest_cache/
 
 # Test coverage reports
 .coverage

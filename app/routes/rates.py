@@ -37,7 +37,7 @@ async def get_shipping_rates(unified_input: ShippingRequest):
         print("Cache miss for key:", cache_key)
 
         # Convert the parsed model into a dictionary for further processing
-        input_data = unified_input.dict()
+        input_data = unified_input.model_dump() 
 
         # Generate payloads
         citylink_payload = create_citylink_payload(input_data)

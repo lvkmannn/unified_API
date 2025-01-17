@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from app.routes import rates
 from app.utils.rate_limiter import is_rate_limited
+import time
 
 app = FastAPI()
 
@@ -22,6 +23,20 @@ async def rate_limiter_middleware(request: Request, call_next):
         )
 
     return await call_next(request)
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+
+    # Start timing the request processing
+    start_time = time.time()
+
+    # Process the request
+    response = await call_next(request)
+
+    # Log the response and processing time
+    process_time = time.time() - start_time
+
+    return response
 
 @app.get("/")
 def read_root():
