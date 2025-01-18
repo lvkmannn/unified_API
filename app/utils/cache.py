@@ -12,7 +12,7 @@ def get_cached_rates(cache_key: str):
         return json.loads(cached_data)
     return None
 
-def set_cached_rates(cache_key: str, citylink_rate: float, jt_rate: float, expiration: int = 3600):
+def set_cached_rates(cache_key: str, citylink_rate: float, jt_rate: float, poslaju_rate: float, expiration: int = 3600):
     """
     Cache rates in Redis with an expiration time.
     :param cache_key: The unique cache key.
@@ -20,5 +20,5 @@ def set_cached_rates(cache_key: str, citylink_rate: float, jt_rate: float, expir
     :param jt_rate: J&T rate to cache.
     :param expiration: Expiration time in seconds (default: 1 hour).
     """
-    data = {"citylink_rate": citylink_rate, "jt_rate": jt_rate}
+    data = {"citylink_rate": citylink_rate, "jt_rate": jt_rate, "poslaju_rate": poslaju_rate}
     redis_client.setex(cache_key, expiration, json.dumps(data))

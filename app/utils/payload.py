@@ -49,3 +49,15 @@ def create_jt_payload(unified_input: dict) -> dict:
 
     return payload
 
+
+def create_poslaju_payload(unified_input: dict) -> dict:
+    """
+    Create payload for Poslaju API.
+    """
+    payload = {
+        "country": "Malaysia",
+        "postcodeFrom": unified_input["origin"]["postcode"],
+        "postcodeTo": unified_input["destination"]["postcode"],
+        "weight": unified_input["package"]["weight"]
+    }
+    return payload
