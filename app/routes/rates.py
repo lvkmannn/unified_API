@@ -14,14 +14,12 @@ async def get_shipping_rates(unified_input: ShippingRequest):
 
     try:
         # Generate a unique cache key based on the request
-        cache_key = f"{unified_input.shipping_type}:{unified_input.package_type}:" \
-                    f"{unified_input.origin.country}-{unified_input.origin.postcode}:" \
-                    f"{unified_input.destination.country}-{unified_input.destination.postcode}:" \
+        cache_key = f"{unified_input.package_type}:" \
+                    f"{unified_input.origin.postcode}-{unified_input.destination.postcode}:" \
                     f"{unified_input.package.weight}:" \
                     f"{unified_input.package.dimensions.get('length', '')}x" \
                     f"{unified_input.package.dimensions.get('width', '')}x" \
                     f"{unified_input.package.dimensions.get('height', '')}:" \
-                    f"{unified_input.jnt_shipping_type}:" \
                     f"{unified_input.package.item_value if unified_input.package.item_value is not None else '0'}"
 
         
@@ -33,7 +31,7 @@ async def get_shipping_rates(unified_input: ShippingRequest):
                 "data": [
                     {"courier": "citylink", "rate": cached_rates["citylink_rate"]},
                     {"courier": "jt", "rate": cached_rates["jt_rate"]},
-                    {"courier": "poslaju", "rate": poslaju_rate},
+                    {"courier": "poslaju", "rate": cached_rates["poslaju_rate"]},
                 ]
             }
         

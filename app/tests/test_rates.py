@@ -8,15 +8,12 @@ client = TestClient(app)
 @pytest.fixture
 def mock_payload():
     return {
-        "shipping_type": "domestic",
         "package_type": "parcel",
         "origin": {
-            "country": "MY",
             "postcode": "40000",
             "state": "Selangor"
         },
         "destination": {
-            "country": "MY",
             "postcode": "50000",
             "state": "Kuala Lumpur"
         },
@@ -27,9 +24,8 @@ def mock_payload():
                 "width": 15,
                 "height": 10
             },
-            "item_value": 250.00
-        },
-        "jnt_shipping_type": "EZ"
+            "item_value": 1000
+        }
     }
 
 # Test rates valid input
