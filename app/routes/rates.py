@@ -45,14 +45,11 @@ async def get_shipping_rates(unified_input: ShippingRequest):
         jt_payload = create_jt_payload(input_data)
 
         # Fetch rates for CityLink
-        # Fetch rates for CityLink
-        logger.info("Fetching rates from CityLink")
         citylink_rate = await fetch_citylink_rate(citylink_payload)
         logger.info(f"CityLink Rate: {citylink_rate}")
 
         # Fetch rates for J&T
         package_type = input_data.get("package_type", "parcel")  # Default to parcel if not specified
-        logger.info("Fetching rates from J&T")
         jt_rate = fetch_jt_rate(jt_payload, package_type=package_type)
         logger.info(f"J&T Rate: {jt_rate}")
 
