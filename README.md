@@ -5,6 +5,7 @@ The Unified API Middleware provides a robust solution for calculating postage ra
 
 At this moment, the API supports **domestic postage within Malaysia only (CityLink, Poslaju and J&T)**. In future updates, it will support **international postage** for various couriers.
 
+![Unified API Middleware Diagram](images/unified_api_diagram.png)
 ---
 
 ## **Table of Contents**
